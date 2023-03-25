@@ -4,7 +4,6 @@ import { throttle } from 'lodash';
 import { search as emojiSearch } from '../features/emoji/emoji_mart_search_light';
 import { tagHistory } from '../settings';
 import { useEmoji } from './emojis';
-import resizeImage from '../utils/resize_image';
 import { importFetchedAccounts } from './importer';
 import { updateTimeline } from './timelines';
 import { showAlertForError } from './alerts';
@@ -247,43 +246,39 @@ export function uploadCompose(files) {
 
     dispatch(uploadComposeRequest());
 
-    for (const [i, f] of Array.from(files).entries()) {
+    for (const [i, file] of Array.from(files).entries()) {
       if (media.size + i > 3) break;
 
-      resizeImage(f).then(file => {
-        const data = new FormData();
-        data.append('file', file);
-        // Account for disparity in size of original image and resized data
-        total += file.size - f.size;
+      const data = new FormData();
+      data.append('file', file);
 
-        return api(getState).post('/api/v2/media', data, {
-          onUploadProgress: function({ loaded }){
-            progress[i] = loaded;
-            dispatch(uploadComposeProgress(progress.reduce((a, v) => a + v, 0), total));
-          },
-        }).then(({ status, data }) => {
-          // If server-side processing of the media attachment has not completed yet,
-          // poll the server until it is, before showing the media attachment as uploaded
+      api(getState).post('/api/v2/media', data, {
+        onUploadProgress: function({ loaded }){
+          progress[i] = loaded;
+          dispatch(uploadComposeProgress(progress.reduce((a, v) => a + v, 0), total));
+        },
+      }).then(({ status, data }) => {
+        // If server-side processing of the media attachment has not completed yet,
+        // poll the server until it is, before showing the media attachment as uploaded
 
-          if (status === 200) {
-            dispatch(uploadComposeSuccess(data, f));
-          } else if (status === 202) {
-            let tryCount = 1;
-            const poll = () => {
-              api(getState).get(`/api/v1/media/${data.id}`).then(response => {
-                if (response.status === 200) {
-                  dispatch(uploadComposeSuccess(response.data, f));
-                } else if (response.status === 206) {
-                  let retryAfter = (Math.log2(tryCount) || 1) * 1000;
-                  tryCount += 1;
-                  setTimeout(() => poll(), retryAfter);
-                }
-              }).catch(error => dispatch(uploadComposeFail(error)));
-            };
+        if (status === 200) {
+          dispatch(uploadComposeSuccess(data, file));
+        } else if (status === 202) {
+          let tryCount = 1;
+          const poll = () => {
+            api(getState).get(`/api/v1/media/${data.id}`).then(response => {
+              if (response.status === 200) {
+                dispatch(uploadComposeSuccess(response.data, file));
+              } else if (response.status === 206) {
+                let retryAfter = (Math.log2(tryCount) || 1) * 1000;
+                tryCount += 1;
+                setTimeout(() => poll(), retryAfter);
+              }
+            }).catch(error => dispatch(uploadComposeFail(error)));
+          };
 
-            poll();
-          }
-        });
+          poll();
+        }
       }).catch(error => dispatch(uploadComposeFail(error)));
     };
   };
