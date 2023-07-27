@@ -13,6 +13,10 @@ class TextFormatter
     multiline: true,
   }.freeze
 
+  # This matches any sequence of hashtags at the end of the text that begins
+  # at a new line but is not the only content of the text
+  HASHTAG_AREA_REGEX = /\W^(#(#{Tag::HASHTAG_NAME_PAT})\s?)+\z/i
+
   attr_reader :text, :options
 
   # @param [String] text
@@ -20,9 +24,10 @@ class TextFormatter
   # @option options [Boolean] :multiline
   # @option options [Boolean] :with_domains
   # @option options [Boolean] :with_rel_me
+  # @option options [Boolean] :strip_rich_entities
   # @option options [Array<Account>] :preloaded_accounts
   def initialize(text, options = {})
-    @text    = text
+    @text    = options[:strip_rich_entities] ? strip_hashtag_area(text) : text
     @options = DEFAULT_OPTIONS.merge(options)
   end
 
@@ -162,5 +167,9 @@ class TextFormatter
 
   def preloaded_accounts?
     preloaded_accounts.present?
+  end
+
+  def strip_hashtag_area(text)
+    text.gsub(HASHTAG_AREA_REGEX, '')
   end
 end
