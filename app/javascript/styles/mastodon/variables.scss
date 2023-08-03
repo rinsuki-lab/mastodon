@@ -94,10 +94,18 @@ $font-display: 'mastodon-font-display' !default;
 $font-monospace: 'mastodon-font-monospace' !default;
 
 :root {
+  --dropdown-text-color: #{$primary-text-color};
+  --dropdown-subdued-text-color: #{$darker-text-color};
   --dropdown-border-color: #{lighten($ui-base-color, 12%)};
   --dropdown-background-color: #{lighten($ui-base-color, 4%)};
   --dropdown-shadow: 0 20px 25px -5px #{rgba($base-shadow-color, 0.25)},
     0 8px 10px -6px #{rgba($base-shadow-color, 0.25)};
+  --popout-background-color: #{$ui-base-color};
   --modal-background-color: #{darken($ui-base-color, 4%)};
   --modal-border-color: #{lighten($ui-base-color, 4%)};
+  --input-background-color: #{$ui-base-color};
+  --input-active-background-color: #{lighten($ui-base-color, 4%)};
+  --input-border-color: #{lighten($ui-base-color, 8%)};
+  --input-text-color: #{$darker-text-color};
+  --input-placeholder-color: #{lighten($darker-text-color, 4%)};
 }

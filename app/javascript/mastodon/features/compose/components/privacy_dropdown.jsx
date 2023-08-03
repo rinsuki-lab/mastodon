@@ -262,7 +262,6 @@ class PrivacyDropdown extends PureComponent {
             size={18}
             expanded={open}
             active={open}
-            inverted
             onClick={this.handleToggle}
             onMouseDown={this.handleMouseDown}
             onKeyDown={this.handleButtonKeyDown}

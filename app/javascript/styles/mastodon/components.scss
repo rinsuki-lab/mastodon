@@ -233,20 +233,16 @@
       color: lighten($lighter-text-color, 7%);
       background-color: transparent;
     }
+  }
 
-    &.active {
+  &.active {
+    color: $highlight-text-color;
+
+    &:hover,
+    &:active,
+    &:focus {
       color: $highlight-text-color;
-
-      &:hover,
-      &:active,
-      &:focus {
-        color: $highlight-text-color;
-        background-color: transparent;
-      }
-
-      &.disabled {
-        color: lighten($highlight-text-color, 13%);
-      }
+      background-color: transparent;
     }
   }
 
@@ -280,7 +276,7 @@
 }
 
 .text-icon-button {
-  color: $lighter-text-color;
+  color: $action-button-color;
   border: 0;
   border-radius: 4px;
   background: transparent;
@@ -293,8 +289,8 @@
   &:hover,
   &:active,
   &:focus {
-    color: darken($lighter-text-color, 7%);
-    background-color: rgba($lighter-text-color, 0.15);
+    color: lighten($lighter-text-color, 7%);
+    background-color: rgba($action-button-color, 0.15);
   }
 
   &:focus-visible {
@@ -302,7 +298,7 @@
   }
 
   &.disabled {
-    color: lighten($lighter-text-color, 20%);
+    color: darken($action-button-color, 13%);
     background-color: transparent;
     cursor: default;
   }
@@ -453,37 +449,35 @@ body > [data-popper-placement] {
     box-sizing: border-box;
     width: 100%;
     margin: 0;
-    color: $inverted-text-color;
-    background: $simple-background-color;
-    padding: 10px;
+    color: var(--input-text-color);
+    background: var(--input-background-color);
+    padding: 15px;
     font-family: inherit;
-    font-size: 14px;
     resize: vertical;
     border: 0;
     outline: 0;
+    font-size: 16px;
+    line-height: 18px;
 
     &::placeholder {
-      color: $dark-text-color;
+      color: var(--input-placeholder-color);
     }
 
     &:focus {
       outline: 0;
     }
-
-    @media screen and (width <= 600px) {
-      font-size: 16px;
-    }
   }
 
   .spoiler-input__input {
     border-radius: 4px;
+    border: 1px solid var(--input-border-color);
   }
 
   .autosuggest-textarea__textarea {
     min-height: 100px;
     border-radius: 4px 4px 0 0;
     padding-bottom: 0;
-    padding-right: 10px + 22px; // Cannot use inline-end because of dir=auto
+    padding-right: 15px + 22px; // Cannot use inline-end because of dir=auto
     resize: none;
     scrollbar-color: initial;
 
@@ -507,12 +501,14 @@ body > [data-popper-placement] {
     display: none;
     position: absolute;
     top: 100%;
-    width: 100%;
+    width: calc(100% + 2px);
+    inset-inline-start: -1px;
     z-index: 99;
-    box-shadow: 4px 4px 6px rgba($base-shadow-color, 0.4);
-    background: $ui-secondary-color;
+    box-shadow: var(--dropdown-shadow);
+    background: var(--popout-background-color);
+    border: 1px solid var(--dropdown-border-color);
+    border-top: 0;
     border-radius: 0 0 4px 4px;
-    color: $inverted-text-color;
     font-size: 14px;
     padding: 6px;
 
@@ -530,7 +526,7 @@ body > [data-popper-placement] {
     &:focus,
     &:active,
     &.selected {
-      background: darken($ui-secondary-color, 10%);
+      background: var(--dropdown-border-color);
     }
   }
 
@@ -577,14 +573,14 @@ body > [data-popper-placement] {
   }
 
   .autosuggest-account .display-name__account {
-    color: $lighter-text-color;
+    color: var(--dropdown-subdued-text-color);
   }
 
   .compose-form__modifiers {
-    color: $inverted-text-color;
+    color: var(--input-text-color);
     font-family: inherit;
     font-size: 14px;
-    background: $simple-background-color;
+    background: var(--input-background-color);
 
     .compose-form__upload-wrapper {
       overflow: hidden;
@@ -659,7 +655,8 @@ body > [data-popper-placement] {
 
   .compose-form__buttons-wrapper {
     padding: 10px;
-    background: darken($simple-background-color, 8%);
+    border-top: 1px solid var(--input-border-color);
+    background: var(--input-background-color);
     border-radius: 0 0 4px 4px;
     display: flex;
     justify-content: space-between;
@@ -2892,6 +2889,7 @@ $ui-header-height: 55px;
   transition: box-shadow 300ms linear;
   min-height: 0;
   position: relative;
+  border: 1px solid var(--input-border-color);
 
   &.active {
     transition: none;
@@ -2906,6 +2904,8 @@ $ui-header-height: 55px;
   flex-direction: column;
   height: calc(100% - 10px);
   overflow-y: hidden;
+  padding: 0 10px;
+  box-sizing: border-box;
 
   .hero-widget {
     box-shadow: none;
@@ -2929,6 +2929,7 @@ $ui-header-height: 55px;
 
   .navigation-bar {
     flex: 0 1 48px;
+    padding: 15px 0;
   }
 
   .compose-form {
@@ -2936,13 +2937,14 @@ $ui-header-height: 55px;
     display: flex;
     flex-direction: column;
     min-height: 310px;
+    padding: 15px 0;
     padding-bottom: 71px;
     margin-bottom: -71px;
   }
 
   .compose-form__autosuggest-wrapper {
     overflow-y: auto;
-    background-color: $white;
+    background-color: var(--input-background-color);
     border-radius: 4px 4px 0 0;
     flex: 0 1 auto;
   }
@@ -2953,6 +2955,10 @@ $ui-header-height: 55px;
 
   .compose-form__upload-thumbnail {
     height: 80px;
+  }
+
+  .link-footer {
+    padding: 0;
   }
 }
 
@@ -4621,7 +4627,8 @@ a.status-card {
 }
 
 .emoji-picker-dropdown__menu {
-  background: $simple-background-color;
+  background: var(--dropdown-background-color);
+  border: 1px solid var(--dropdown-border-color);
   position: relative;
   box-shadow: var(--dropdown-shadow);
   border-radius: 4px;
@@ -4649,9 +4656,10 @@ a.status-card {
   z-index: 4;
   top: -4px;
   inset-inline-start: -8px;
-  background: $simple-background-color;
+  background: var(--dropdown-background-color);
+  border: 1px solid var(--dropdown-border-color);
   border-radius: 4px;
-  box-shadow: 1px 2px 6px rgba($base-shadow-color, 0.2);
+  box-shadow: var(--dropdown-shadow);
   overflow: hidden;
 
   button {
@@ -4664,7 +4672,7 @@ a.status-card {
     &:hover,
     &:focus,
     &:active {
-      background: rgba($ui-secondary-color, 0.4);
+      background: var(--dropdown-border-color);
     }
   }
 
@@ -4775,10 +4783,8 @@ a.status-card {
 
 .emoji-button {
   display: block;
-  padding-top: 5px;
-  padding-bottom: 2px;
-  padding-inline-start: 2px;
-  padding-inline-end: 5px;
+  padding-top: 14px;
+  padding-inline-end: 13px;
   outline: 0;
   cursor: pointer;
 
@@ -4814,11 +4820,13 @@ a.status-card {
 }
 
 .privacy-dropdown__dropdown {
-  background: $simple-background-color;
+  background: var(--dropdown-background-color);
   box-shadow: var(--dropdown-shadow);
+  border: 1px solid var(--dropdown-border-color);
   border-radius: 4px;
   overflow: hidden;
   z-index: 2;
+  padding: 10px;
 
   &.top {
     transform-origin: 50% 100%;
@@ -4839,22 +4847,27 @@ a.status-card {
 }
 
 .privacy-dropdown__option {
-  color: $inverted-text-color;
   padding: 10px;
+  border-radius: 4px;
   cursor: pointer;
   display: flex;
 
   &:hover,
+  &:focus,
+  &:active {
+    background: var(--dropdown-border-color);
+  }
+
   &.active {
     background: $ui-highlight-color;
-    color: $primary-text-color;
+    color: var(--dropdown-text-color);
     outline: 0;
 
     .privacy-dropdown__option__content {
-      color: $primary-text-color;
+      color: var(--dropdown-text-color);
 
       strong {
-        color: $primary-text-color;
+        color: var(--dropdown-text-color);
       }
     }
   }
@@ -4873,12 +4886,12 @@ a.status-card {
 
 .privacy-dropdown__option__content {
   flex: 1 1 auto;
-  color: $lighter-text-color;
+  color: var(--dropdown-subdued-text-color);
 
   strong {
     font-weight: 500;
     display: block;
-    color: $inverted-text-color;
+    color: var(--dropdown-text-color);
 
     @each $lang in $cjk-langs {
       &:lang(#{$lang}) {
@@ -4888,26 +4901,11 @@ a.status-card {
   }
 }
 
-.privacy-dropdown.active {
-  .privacy-dropdown__value {
-    background: $simple-background-color;
-    border-radius: 4px 4px 0 0;
-  }
-
-  &.top .privacy-dropdown__value {
-    border-radius: 0 0 4px 4px;
-  }
-
-  .privacy-dropdown__dropdown {
-    display: block;
-    box-shadow: var(--dropdown-shadow);
-  }
-}
-
 .language-dropdown {
   &__dropdown {
-    background: $simple-background-color;
+    background: var(--dropdown-background-color);
     box-shadow: var(--dropdown-shadow);
+    border: 1px solid var(--dropdown-border-color);
     border-radius: 4px;
     overflow: hidden;
     z-index: 2;
@@ -4935,7 +4933,7 @@ a.status-card {
     &__results {
       &__item {
         cursor: pointer;
-        color: $inverted-text-color;
+        color: $primary-text-color;
         font-weight: 500;
         padding: 10px;
         border-radius: 4px;
@@ -4943,7 +4941,7 @@ a.status-card {
         &:focus,
         &:active,
         &:hover {
-          background: $ui-secondary-color;
+          background: var(--dropdown-border-color);
         }
 
         &__common-name {
@@ -4979,7 +4977,9 @@ a.status-card {
     inset-inline-start: 0;
     margin-top: -2px;
     width: 100%;
-    background: $ui-base-color;
+    background: var(--popout-background-color);
+    border: 1px solid var(--dropdown-border-color);
+    border-top: 0;
     border-radius: 0 0 4px 4px;
     box-shadow: var(--dropdown-shadow);
     z-index: 99;
@@ -5063,7 +5063,7 @@ a.status-card {
   font-size: 16px;
 
   &::placeholder {
-    color: lighten($darker-text-color, 4%);
+    color: var(--input-placeholder-color);
   }
 
   &::-moz-focus-inner {
@@ -5077,7 +5077,7 @@ a.status-card {
   }
 
   &:focus {
-    background: lighten($ui-base-color, 4%);
+    background: var(--input-active-background-color);
   }
 }
 
@@ -5102,7 +5102,7 @@ a.status-card {
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: $secondary-text-color;
+    color: var(--input-placeholder-color);
     cursor: default;
     pointer-events: none;
 
@@ -5124,7 +5124,7 @@ a.status-card {
   .fa-times-circle {
     top: 17px;
     transform: rotate(0deg);
-    color: $action-button-color;
+    color: var(--input-placeholder-color);
     cursor: pointer;
 
     &.active {

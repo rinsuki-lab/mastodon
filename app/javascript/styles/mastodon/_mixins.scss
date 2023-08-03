@@ -15,11 +15,11 @@
   outline: 0;
   box-sizing: border-box;
   width: 100%;
-  border: 0;
   box-shadow: none;
   font-family: inherit;
-  background: $ui-base-color;
-  color: $darker-text-color;
+  background: var(--input-background-color);
+  border: 1px solid var(--input-border-color);
+  color: var(--input-text-color);
   border-radius: 4px;
   font-size: 14px;
   margin: 0;

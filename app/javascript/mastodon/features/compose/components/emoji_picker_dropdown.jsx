@@ -158,7 +158,6 @@ class EmojiPickerMenuImpl extends PureComponent {
     loading: PropTypes.bool,
     onClose: PropTypes.func.isRequired,
     onPick: PropTypes.func.isRequired,
-    style: PropTypes.object,
     intl: PropTypes.object.isRequired,
     skinTone: PropTypes.number.isRequired,
     onSkinTone: PropTypes.func.isRequired,
@@ -249,10 +248,12 @@ class EmojiPickerMenuImpl extends PureComponent {
   };
 
   render () {
-    const { loading, style, intl, custom_emojis, skinTone, frequentlyUsedEmojis } = this.props;
+    const { loading, intl, custom_emojis, skinTone, frequentlyUsedEmojis } = this.props;
 
     if (loading) {
-      return <div style={{ width: 299 }} />;
+      // This is necessary for positioning the popout element correctly over the target
+      // while the emoji picker component is still loading
+      return <div style={{ width: 286 }} />;
     }
 
     const title = intl.formatMessage(messages.emoji);
@@ -274,7 +275,7 @@ class EmojiPickerMenuImpl extends PureComponent {
     categoriesSort.splice(1, 0, ...Array.from(categoriesFromEmojis(custom_emojis)).sort());
 
     return (
-      <div className={classNames('emoji-picker-dropdown__menu', { selecting: modifierOpen })} style={style} ref={this.setRef}>
+      <div className={classNames('emoji-picker-dropdown__menu', { selecting: modifierOpen })} ref={this.setRef}>
         <EmojiPicker
           perLine={8}
           emojiSize={22}
@@ -395,7 +396,7 @@ class EmojiPickerDropdown extends PureComponent {
 
         <Overlay show={active} placement={'bottom'} target={this.findTarget} popperConfig={{ strategy: 'fixed' }}>
           {({ props, placement })=> (
-            <div {...props} style={{ ...props.style, width: 299 }}>
+            <div {...props} style={{ ...props.style }}>
               <div className={`dropdown-animation ${placement}`}>
                 <EmojiPickerMenu
                   custom_emojis={this.props.custom_emojis}

@@ -78,11 +78,11 @@
       box-sizing: border-box;
       width: 100%;
       font-size: 14px;
-      color: $inverted-text-color;
+      color: var(--input-text-color);
       outline: 0;
       font-family: inherit;
-      background: $simple-background-color;
-      border: 1px solid darken($simple-background-color, 14%);
+      background: var(--input-background-color);
+      border: 1px solid var(--input-border-color);
       border-radius: 4px;
       padding: 6px 10px;
 
@@ -105,7 +105,7 @@
   &__input {
     display: inline-block;
     position: relative;
-    border: 1px solid $ui-primary-color;
+    border: 1px solid var(--input-border-color);
     box-sizing: border-box;
     width: 18px;
     height: 18px;
@@ -210,7 +210,7 @@
 }
 
 .compose-form__poll-wrapper {
-  border-top: 1px solid darken($simple-background-color, 8%);
+  border-top: 1px solid var(--input-border-color);
 
   ul {
     padding: 10px;
@@ -225,7 +225,7 @@
   }
 
   .poll__footer {
-    border-top: 1px solid darken($simple-background-color, 8%);
+    border-top: 1px solid var(--input-border-color);
     padding: 10px;
     display: flex;
     align-items: center;
@@ -274,22 +274,20 @@
     appearance: none;
     box-sizing: border-box;
     font-size: 14px;
-    color: $inverted-text-color;
+    color: var(--input-text-color);
     display: inline-block;
     width: auto;
     outline: 0;
     font-family: inherit;
-    background: $simple-background-color
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14.933 18.467' height='19.698' width='15.929'><path d='M3.467 14.967l-3.393-3.5H14.86l-3.392 3.5c-1.866 1.925-3.666 3.5-4 3.5-.335 0-2.135-1.575-4-3.5zm.266-11.234L7.467 0 11.2 3.733l3.733 3.734H0l3.733-3.734z' fill='#{hex-color(darken($simple-background-color, 14%))}'/></svg>")
+
+    // FIXME: SVG fill doesn't work
+    background: var(--input-background-color)
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14.933 18.467' height='19.698' width='15.929'><path d='M3.467 14.967l-3.393-3.5H14.86l-3.392 3.5c-1.866 1.925-3.666 3.5-4 3.5-.335 0-2.135-1.575-4-3.5zm.266-11.234L7.467 0 11.2 3.733l3.733 3.734H0l3.733-3.734z' fill='currentColor'/></svg>")
       no-repeat right 8px center / auto 16px;
-    border: 1px solid darken($simple-background-color, 14%);
+    border: 1px solid var(--input-border-color);
     border-radius: 4px;
     padding: 6px 10px;
     padding-inline-end: 30px;
-  }
-
-  .icon-button.disabled {
-    color: darken($simple-background-color, 14%);
   }
 }
 
