@@ -182,7 +182,7 @@ de:
         display_name: Anzeigename
         email: E-Mail-Adresse
         expires_in: Läuft ab
-        fields: Zusatzfelder
+        fields: Metadaten
         header: Titelbild
         honeypot: "%{label} (nicht ausfüllen)"
         inbox_url: Inbox-URL des Relais
@@ -259,7 +259,7 @@ de:
         status_page_url: Statusseite (URL)
         theme: Standard-Design
         thumbnail: Vorschaubild des Servers
-        timeline_preview: Nicht-authentifizierten Zugriff auf die öffentliche Timeline gestatten
+        timeline_preview: Nicht-authentisierten Zugriff auf öffentliche Timelines gestatten
         trendable_by_default: Trends ohne vorherige Überprüfung erlauben
         trends: Trends aktivieren
         trends_as_landing_page: Trends als Landingpage verwenden
