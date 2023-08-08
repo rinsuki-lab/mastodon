@@ -103,6 +103,7 @@ COPY --from=build-dep --chown=mastodon:mastodon /opt/mastodon /opt/mastodon
 # Run mastodon services in prod mode
 ENV RAILS_ENV="production"
 ENV NODE_ENV="production"
+ENV SOURCE_BASE_URL="https://github.com/rinsuki-lab/mastodon/tree/stable-3.5-rinsuki"
 
 # Tell rails to serve static files
 ENV RAILS_SERVE_STATIC_FILES="true"
