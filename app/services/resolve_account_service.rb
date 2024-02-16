@@ -51,7 +51,7 @@ class ResolveAccountService < BaseService
     # Now it is certain, it is definitely a remote account, and it
     # either needs to be created, or updated from fresh data
 
-    fetch_account!
+    # fetch_account!
   rescue Webfinger::Error, Oj::ParseError => e
     Rails.logger.debug "Webfinger query for #{@uri} failed: #{e}"
     nil
