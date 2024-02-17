@@ -21,7 +21,7 @@ module Mastodon
     end
 
     def suffix
-      '+rinsuki.1'
+      '+rinsuki.2'
     end
 
     def to_a
