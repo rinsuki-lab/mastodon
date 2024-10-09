@@ -1,0 +1,45 @@
+name: Build container image
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'stable-4.2-rinsuki'
+    tags:
+      - '*'
+  pull_request:
+    paths:
+      - .github/workflows/build-image.yml
+      - Dockerfile
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  compute-suffix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: version_vars
+        env:
+          TZ: Etc/UTC
+        run: |
+          echo version_metadata=rinsuki.$(git show --format='%h' --no-patch)>> $GITHUB_OUTPUT
+    outputs:
+      version_metadata: ${{ steps.version_vars.outputs.version_metadata }}
+
+  build-image:
+    needs: compute-suffix
+    uses: ./.github/workflows/build-container-image.yml
+    with:
+      platforms: linux/amd64,linux/arm64
+      use_native_arm64_builder: false
+      cache: true
+      push_to_images: |
+        ghcr.io/${{ github.repository }}
+      version_metadata: ${{ needs.compute-suffix.outputs.version_metadata }}
+      flavor: |
+        latest=false
+      tags: |
+        type=sha,format=long
+    secrets: inherit
