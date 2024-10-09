@@ -48,6 +48,7 @@ ARG GID="991"
 
 # Apply Mastodon build options based on options above
 ENV \
+  GITHUB_REPOSITORY="rinsuki-lab/mastodon" \
   # Apply Mastodon version information
   MASTODON_VERSION_PRERELEASE="${MASTODON_VERSION_PRERELEASE}" \
   MASTODON_VERSION_METADATA="${MASTODON_VERSION_METADATA}" \
