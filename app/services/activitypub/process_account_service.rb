@@ -32,7 +32,11 @@ class ActivityPub::ProcessAccountService < BaseService
       @suspension_changed = false
 
       if @account.nil?
-        return nil if ENV['SHYNESS_MODE'] == 'yes'
+        if ENV['SHYNESS_MODE'] == 'yes'
+          if !((ENV['SHYNESS_ALLOWED_DOMAINS'].split ",").include? @domain)
+            return nil
+          end
+        end
 
         with_redis do |redis|
           return nil if redis.pfcount("unique_subdomains_for:#{PublicSuffix.domain(@domain, ignore_private: true)}") >= SUBDOMAINS_RATELIMIT
