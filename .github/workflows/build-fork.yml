@@ -1,0 +1,56 @@
+name: Build image for forks
+on:
+  push:
+    branches:
+      - stable-*-rinsuki
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  compute-suffix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
+          fetch-tags: true
+          sparse-checkout: ''
+      - run: git fetch https://github.com/mastodon/mastodon --tags
+      - id: version_vars
+        env:
+          TZ: Asia/Tokyo
+        run: |
+          set -euo pipefail
+          echo mastodon_version_metadata=$(git describe --tags | sed -E 's/^([^-]+)-([^-]+)-g(.+)$/rinsuki.c\2.\3/') >> $GITHUB_OUTPUT
+          echo docker_tag=$(git describe --tags | sed -E 's/^([^-]+)-([^-]+)-g(.+)$/\1+rinsuki.c\2.\3/') >> $GITHUB_OUTPUT
+    outputs:
+      version_metadata: ${{ steps.version_vars.outputs.mastodon_version_metadata }}
+      docker_tag: ${{ steps.version_vars.outputs.docker_tag }}
+
+  build-image:
+    needs: compute-suffix
+    uses: ./.github/workflows/build-container-image.yml
+    with:
+      file_to_build: Dockerfile
+      cache: false
+      push_to_images: |
+        ghcr.io/${{ github.repository }}
+      version_metadata: ${{ needs.compute-suffix.outputs.version_metadata }}
+      tags: |
+        type=raw,value=${{ needs.compute-suffix.outputs.docker_tag }}
+    secrets: inherit
+
+  build-image-streaming:
+    needs: compute-suffix
+    uses: ./.github/workflows/build-container-image.yml
+    with:
+      file_to_build: streaming/Dockerfile
+      cache: false
+      push_to_images: |
+        ghcr.io/${{ github.repository }}-streaming
+      version_metadata: ${{ needs.compute-suffix.outputs.version_metadata }}
+      tags: |
+        type=raw,value=${{ needs.compute-suffix.outputs.docker_tag }}
+    secrets: inherit
