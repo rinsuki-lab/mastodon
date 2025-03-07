@@ -148,6 +148,12 @@ class MediaAttachment < ApplicationRecord
     original: VIDEO_FORMAT.merge(passthrough_options: VIDEO_PASSTHROUGH_OPTIONS).freeze,
   }.freeze
 
+  VIDEO_STYLES_FOR_NON_TRANSCODE = VIDEO_STYLES.merge(
+    original: VIDEO_STYLES[:original].merge(
+      should_not_transcode: true
+    ).freeze
+  ).freeze
+
   AUDIO_STYLES = {
     original: {
       format: 'mp3',
@@ -306,14 +312,18 @@ class MediaAttachment < ApplicationRecord
     private
 
     def file_styles(attachment)
-      if attachment.instance.file_content_type == 'image/gif' || VIDEO_CONVERTIBLE_MIME_TYPES.include?(attachment.instance.file_content_type)
+      if attachment.instance.file_content_type == 'image/gif'
         VIDEO_CONVERTED_STYLES
       elsif IMAGE_CONVERTIBLE_MIME_TYPES.include?(attachment.instance.file_content_type)
         IMAGE_CONVERTED_STYLES
       elsif IMAGE_MIME_TYPES.include?(attachment.instance.file_content_type)
         IMAGE_STYLES
       elsif VIDEO_MIME_TYPES.include?(attachment.instance.file_content_type)
-        VIDEO_STYLES
+        if attachment.instance.local?
+          VIDEO_STYLES_FOR_NON_TRANSCODE
+        else
+          VIDEO_STYLES
+        end
       else
         AUDIO_STYLES
       end
