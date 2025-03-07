@@ -17,6 +17,7 @@ module Paperclip
       @passthrough_options = options[:passthrough_options]
       @convert_options     = options[:convert_options].dup
       @vfr_threshold       = options[:vfr_frame_rate_threshold]
+      @should_not_transcode = options[:should_not_transcode]
     end
 
     def make
@@ -41,6 +42,10 @@ module Paperclip
         @output_options['vframes'] = 1
       when 'mp4'
         unless eligible_to_passthrough?(metadata)
+          if @should_not_transcode
+            reasons = not_passthroughable_reasons metadata
+            raise Paperclip::Error, "File not meets our passthrough policy, and Transcode is disabled on this server: #{reasons.join(', ')}" unless reasons.empty?
+          end
           size_limit_in_bits = MediaAttachment::VIDEO_LIMIT * 8
           desired_bitrate = (metadata.width * metadata.height * 30 * BITS_PER_PIXEL).floor
           duration = [metadata.duration, 1].max
@@ -112,6 +117,18 @@ module Paperclip
 
     def high_vfr?(metadata)
       @vfr_threshold && metadata.r_frame_rate && metadata.r_frame_rate > @vfr_threshold
+    end
+
+    def not_passthroughable_reasons(metadata)
+      return [] if @passthrough_options.nil?
+
+      reasons = []
+
+      reasons << "video codec #{metadata.video_codec} is not supported (only #{@passthrough_options[:video_codecs].compact.join(', ')} are supported)" unless @passthrough_options[:video_codecs].include?(metadata.video_codec)
+      reasons << "audio codec #{metadata.audio_codec} is not supported (only #{@passthrough_options[:audio_codecs].compact.join(', ')} are supported)" unless @passthrough_options[:audio_codecs].include?(metadata.audio_codec)
+      reasons << "colorspace #{metadata.colorspace} is not supported (only #{@passthrough_options[:colorspaces].compact.join(', ')} are supported)" unless @passthrough_options[:colorspaces].include?(metadata.colorspace)
+
+      reasons
     end
 
     def eligible_to_passthrough?(metadata)
