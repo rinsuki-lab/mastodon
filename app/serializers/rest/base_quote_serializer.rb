@@ -4,17 +4,17 @@ class REST::BaseQuoteSerializer < ActiveModel::Serializer
   attributes :state
 
   def state
-    return object.state unless object.accepted?
+    return object.state if object.strongly_rejected?
 
     # Extra states when a status is unavailable
     return 'deleted' if object.quoted_status.nil?
     return 'unauthorized' if status_filter.filtered_for_quote?
 
-    object.state
+    'accepted'
   end
 
   def quoted_status
-    object.quoted_status if object.accepted? && object.quoted_status.present? && !status_filter.filtered_for_quote?
+    object.quoted_status if (!object.strongly_rejected?) && object.quoted_status.present? && !status_filter.filtered_for_quote?
   end
 
   private

@@ -39,6 +39,10 @@ class Quote < ApplicationRecord
     update!(state: :accepted)
   end
 
+  def strongly_rejected?
+    revoked? || rejected?
+  end
+
   def reject!
     if accepted?
       update!(state: :revoked)
