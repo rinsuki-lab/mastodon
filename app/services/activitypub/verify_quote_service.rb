@@ -47,6 +47,12 @@ class ActivityPub::VerifyQuoteService < BaseService
       true
     end
 
+    if @quote.legacy
+      @quote.accept!
+
+      true
+    end
+
     false
   end
 
