@@ -55,6 +55,10 @@ class Quote < ApplicationRecord
     reset_parent_cache! if attribute_previously_changed?(:state)
   end
 
+  def strongly_rejected?
+    revoked? || rejected?
+  end
+
   def reject!
     if accepted?
       update!(state: :revoked, approval_uri: nil)
