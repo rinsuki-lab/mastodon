@@ -95,6 +95,7 @@ Sidekiq.configure_server do |config|
   end
 
   config.logger.level = Logger.const_get(ENV.fetch('RAILS_LOG_LEVEL', 'info').upcase.to_s)
+  config.logger.formatter = Sidekiq::Logger::Formatters::JSON.new
 
   SidekiqUniqueJobs::Server.configure(config)
 end
@@ -108,6 +109,7 @@ Sidekiq.configure_client do |config|
   end
 
   config.logger.level = Logger.const_get(ENV.fetch('RAILS_LOG_LEVEL', 'info').upcase.to_s)
+  config.logger.formatter = Sidekiq::Logger::Formatters::JSON.new
 end
 
 SidekiqUniqueJobs.configure do |config|
