@@ -2,6 +2,31 @@
 
 require 'active_support/core_ext/integer/time'
 
+class JsonLogFormatter < Logger::Formatter
+  def call(severity, time, progname, msg)
+    entry = {
+      level: severity,
+      progname: progname,
+      ts: time.iso8601(6),
+    }
+
+    if !current_tags.empty?
+      tags = Rails.application.config.log_tags.zip(current_tags).to_h
+      entry.merge!(tags)
+      msg = msg&.split(" ", current_tags.size + 1)&.last
+    end
+
+    begin
+      msg = JSON.parse(msg)
+      entry.merge!(msg)
+    rescue JSON::ParserError
+      entry[:msg] = msg
+    end
+
+    "#{entry.to_json}\n"
+  end
+end
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -53,7 +78,7 @@ Rails.application.configure do
   }
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = Logger::Formatter.new
+  config.log_formatter = JsonLogFormatter.new
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [:request_id]
@@ -89,6 +114,7 @@ Rails.application.configure do
 
   # Better log formatting
   config.lograge.enabled = true
+  config.lograge.formatter = Lograge::Formatters::Json.new
 
   config.lograge.custom_payload do |controller|
     { key: controller.signature_key_id } if controller.respond_to?(:signed_request?) && controller.signed_request?
