@@ -185,6 +185,7 @@ export const quoteComposeByStatus = createAppThunk(
       dispatch(showAlert({ message: messages.quoteErrorQuote }));
     } else if (
       status.getIn(['quote_approval', 'current_user']) !== 'automatic' &&
+      status.getIn(['quote_approval', 'current_user']) !== 'unknown' &&
       status.getIn(['quote_approval', 'current_user']) !== 'manual'
     ) {
       dispatch(showAlert({ message: messages.quoteErrorUnauthorized }));
@@ -248,7 +249,7 @@ export const pasteLinkCompose = createDataLoadingThunk(
     if (
       data.statuses.length === 1 &&
       data.statuses[0] &&
-      ['automatic', 'manual'].includes(
+      ['automatic', 'unknown', 'manual'].includes(
         data.statuses[0].quote_approval?.current_user ?? 'denied',
       )
     ) {

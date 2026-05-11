@@ -84,7 +84,7 @@ export const selectStatusState = createAppSelector(
       isReblogged: !!status.get('reblogged'),
       isReblogAllowed: isPublic || isMineAndPrivate,
       isQuoteAutomaticallyAccepted:
-        status.getIn(['quote_approval', 'current_user']) === 'automatic' &&
+        (status.getIn(['quote_approval', 'current_user']) === 'automatic' || status.getIn(['quote_approval', 'current_user']) === 'unknown') &&
         (isPublic || isMineAndPrivate),
       isQuoteManuallyAccepted:
         status.getIn(['quote_approval', 'current_user']) === 'manual' &&
