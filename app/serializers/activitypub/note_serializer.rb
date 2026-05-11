@@ -31,7 +31,7 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
 
   attribute :voters_count, if: :poll_and_voters_count?
 
-  attribute :quote, if: :quote?
+  attribute :quote, if: :modern_quote?
   attribute :quote, key: :_misskey_quote, if: :serializable_quote?
   attribute :quote, key: :quote_uri, if: :serializable_quote?
   attribute :quote_authorization, if: :quote_authorization?
@@ -214,12 +214,16 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
     object.quote&.present?
   end
 
+  def modern_quote?
+    quote? && object.quote&.quoted_status&.quote_approval_policy != (Status::QUOTE_APPROVAL_POLICY_FLAGS[:unsupported_policy] << 16)
+  end
+
   def serializable_quote?
     object.quote&.quoted_status&.present?
   end
 
   def quote_authorization?
-    object.quote.present? && ActivityPub::TagManager.instance.approval_uri_for(object.quote).present?
+    object.quote.present? && modern_quote? && ActivityPub::TagManager.instance.approval_uri_for(object.quote).present?
   end
 
   def quote
