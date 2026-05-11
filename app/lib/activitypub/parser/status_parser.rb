@@ -126,7 +126,7 @@ class ActivityPub::Parser::StatusParser
   def quote_policy
     flags = 0
     policy = @object.dig('interactionPolicy', 'canQuote')
-    return flags if policy.blank?
+    return (Status::QUOTE_APPROVAL_POLICY_FLAGS[:unsupported_policy] << 16) if policy.blank?
 
     flags |= quote_subpolicy(policy['automaticApproval'])
     flags <<= 16
