@@ -10,7 +10,7 @@ ARG BASE_REGISTRY="docker.io"
 
 # Node version to use in base image, change with [--build-arg NODE_MAJOR_VERSION="22"]
 # renovate: datasource=node-version depName=node
-ARG NODE_MAJOR_VERSION="24"
+ARG NODE_MAJOR_VERSION="24.22.1"
 # Debian image to use for base image, change with [--build-arg DEBIAN_VERSION="trixie"]
 ARG DEBIAN_VERSION="trixie"
 # Node image to use for base image based on combined variables (ex: 20-trixie-slim)
@@ -105,6 +105,7 @@ RUN \
   --mount=type=cache,id=yarn-cache-${TARGETPLATFORM},target=/usr/local/share/.cache/yarn,sharing=locked \
   # Install Node packages
   yarn workspaces focus --production @mastodon/streaming;
+RUN node --version
 
 # Set the running user for resulting container
 USER mastodon
